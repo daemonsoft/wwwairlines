@@ -24,6 +24,14 @@
         <servlet-name>clientDetailServlet</servlet-name>
         <servlet-class>com.udea.controller.clientDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CheckIn</servlet-name>
+        <servlet-class>com.udea.controller.CheckIn</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>QRCodeServlet</servlet-name>
+        <servlet-class>com.udea.controller.QRCodeServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/IndexServlet</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>clientDetailServlet</servlet-name>
         <url-pattern>/clientDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckIn</servlet-name>
+        <url-pattern>/CheckIn</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>QRCodeServlet</servlet-name>
+        <url-pattern>/QRCodeServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

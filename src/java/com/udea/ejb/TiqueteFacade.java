@@ -9,6 +9,7 @@ import com.udea.business.Tiquete;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -39,5 +40,16 @@ public class TiqueteFacade extends AbstractFacade<Tiquete> implements TiqueteFac
             return null;
         }
         return q.getResultList();
+    }
+
+    @Override
+    public Tiquete finfByCodigo(String codigo) {
+        Query q =  em.createNamedQuery("Tiquete.findByCodigo");
+        q.setParameter("codigo", codigo);
+        try{
+        return (Tiquete)q.getSingleResult();
+        }catch(NoResultException nre){
+            return null;
+        }
     }
 }

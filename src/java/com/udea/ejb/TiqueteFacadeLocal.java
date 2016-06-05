@@ -29,6 +29,8 @@ public interface TiqueteFacadeLocal {
     List<Tiquete> findAll();
 
     List<Tiquete> findRange(int[] range);
+    
+    Tiquete finfByCodigo(String codigo);
 
     int count();
     

@@ -34,12 +34,41 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Tiquete.findByPrecio", query = "SELECT t FROM Tiquete t WHERE t.precio = :precio"),
     @NamedQuery(name = "Tiquete.findByTipoid", query = "SELECT t FROM Tiquete t WHERE t.tipoid = :tipoid"),
     @NamedQuery(name = "Tiquete.findByNumeroid", query = "SELECT t FROM Tiquete t WHERE t.numeroid = :numeroid"),
-    @NamedQuery(name = "Tiquete.findByTipo", query = "SELECT t FROM Tiquete t WHERE t.tipo = :tipo")})
+    @NamedQuery(name = "Tiquete.findByTipo", query = "SELECT t FROM Tiquete t WHERE t.tipo = :tipo"),
+    @NamedQuery(name = "Tiquete.findByCodigo", query = "SELECT t FROM Tiquete t WHERE t.codigo = :codigo")})
 public class Tiquete implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected TiquetePK tiquetePK;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 6, max = 6)
+    @Column(name = "codigo")
+    private String codigo;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 1)
+    @Column(name = "checkedin")
+    private int checkedin;
+
+    public int getCheckedin() {
+        return checkedin;
+    }
+
+    public void setCheckedin(int checkedin) {
+        this.checkedin = checkedin;
+    }
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2)
     @Column(name = "precio")
     private Integer precio;
     @Basic(optional = false)
@@ -61,6 +90,7 @@ public class Tiquete implements Serializable {
     @JoinColumn(name = "asiento", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Asiento asiento1;
+    
 
     public Tiquete() {
     }
@@ -69,11 +99,13 @@ public class Tiquete implements Serializable {
         this.tiquetePK = tiquetePK;
     }
 
-    public Tiquete(TiquetePK tiquetePK, String tipoid, int numeroid, int tipo) {
+    public Tiquete(TiquetePK tiquetePK, String tipoid, int numeroid, int tipo, String codigo) {
         this.tiquetePK = tiquetePK;
         this.tipoid = tipoid;
         this.numeroid = numeroid;
         this.tipo = tipo;
+        this.codigo = codigo;
+        this.checkedin = 0;
     }
 
     public Tiquete(int vuelo, int asiento) {
@@ -160,5 +192,5 @@ public class Tiquete implements Serializable {
     public String toString() {
         return "com.udea.business.Tiquete[ tiquetePK=" + tiquetePK + " ]";
     }
-    
+
 }
