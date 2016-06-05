@@ -5,6 +5,7 @@ $(document).ready(function () {
         selectYears: 15 // Creates a dropdown of 15 years to control year
     });
     $('select').material_select();
+    $(".button-collapse").sideNav();
     $('input[type=radio]').click(function () {
         var checkval = $(this).val();
         var regreso = document.getElementById('fecharegreso');

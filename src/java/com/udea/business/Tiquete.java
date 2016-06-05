@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.udea.business;
 
 import java.io.Serializable;
@@ -35,42 +30,16 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Tiquete.findByTipoid", query = "SELECT t FROM Tiquete t WHERE t.tipoid = :tipoid"),
     @NamedQuery(name = "Tiquete.findByNumeroid", query = "SELECT t FROM Tiquete t WHERE t.numeroid = :numeroid"),
     @NamedQuery(name = "Tiquete.findByTipo", query = "SELECT t FROM Tiquete t WHERE t.tipo = :tipo"),
-    @NamedQuery(name = "Tiquete.findByCodigo", query = "SELECT t FROM Tiquete t WHERE t.codigo = :codigo")})
+    @NamedQuery(name = "Tiquete.findByCodigo", query = "SELECT t FROM Tiquete t WHERE t.codigo = :codigo"),
+    @NamedQuery(name = "Tiquete.findByCheckedin", query = "SELECT t FROM Tiquete t WHERE t.checkedin = :checkedin")})
 public class Tiquete implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected TiquetePK tiquetePK;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 6, max = 6)
-    @Column(name = "codigo")
-    private String codigo;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 1)
-    @Column(name = "checkedin")
-    private int checkedin;
-
-    public int getCheckedin() {
-        return checkedin;
-    }
-
-    public void setCheckedin(int checkedin) {
-        this.checkedin = checkedin;
-    }
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2)
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "precio")
-    private Integer precio;
+    private Double precio;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2)
@@ -84,13 +53,21 @@ public class Tiquete implements Serializable {
     @NotNull
     @Column(name = "tipo")
     private int tipo;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 6)
+    @Column(name = "codigo")
+    private String codigo;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "checkedin")
+    private int checkedin;
     @JoinColumn(name = "vuelo", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Vuelo vuelo1;
     @JoinColumn(name = "asiento", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Asiento asiento1;
-    
 
     public Tiquete() {
     }
@@ -99,8 +76,9 @@ public class Tiquete implements Serializable {
         this.tiquetePK = tiquetePK;
     }
 
-    public Tiquete(TiquetePK tiquetePK, String tipoid, int numeroid, int tipo, String codigo) {
+    public Tiquete(TiquetePK tiquetePK, double precio, String tipoid, int numeroid, int tipo, String codigo) {
         this.tiquetePK = tiquetePK;
+        this.precio = precio;
         this.tipoid = tipoid;
         this.numeroid = numeroid;
         this.tipo = tipo;
@@ -120,11 +98,11 @@ public class Tiquete implements Serializable {
         this.tiquetePK = tiquetePK;
     }
 
-    public Integer getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 
@@ -150,6 +128,22 @@ public class Tiquete implements Serializable {
 
     public void setTipo(int tipo) {
         this.tipo = tipo;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public int getCheckedin() {
+        return checkedin;
+    }
+
+    public void setCheckedin(int checkedin) {
+        this.checkedin = checkedin;
     }
 
     public Vuelo getVuelo1() {

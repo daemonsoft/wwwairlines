@@ -39,6 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Aeropuerto.findByPais", query = "SELECT a FROM Aeropuerto a WHERE a.pais = :pais")})
 public class Aeropuerto implements Serializable {
 
+    @OneToMany(mappedBy = "aeropuerto")
+    private List<Escala> escalaList;
+
     @OneToMany(mappedBy = "aeropuertoSalida", fetch = FetchType.LAZY)
     private List<Vuelo> vueloList;
     @OneToMany(mappedBy = "aeropuertoLlegada", fetch = FetchType.LAZY)
@@ -167,6 +170,15 @@ public class Aeropuerto implements Serializable {
 
     public void setVueloList1(List<Vuelo> vueloList1) {
         this.vueloList1 = vueloList1;
+    }
+
+    @XmlTransient
+    public List<Escala> getEscalaList() {
+        return escalaList;
+    }
+
+    public void setEscalaList(List<Escala> escalaList) {
+        this.escalaList = escalaList;
     }
     
 }

@@ -10,11 +10,9 @@ import com.udea.business.ClientePK;
 import com.udea.business.Socio;
 import com.udea.business.SocioPK;
 import com.udea.business.Tiquete;
-import com.udea.business.Vuelo;
 import com.udea.ejb.ClienteFacadeLocal;
 import com.udea.ejb.SocioFacadeLocal;
 import com.udea.ejb.TiqueteFacadeLocal;
-import com.udea.ejb.VueloFacadeLocal;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -22,7 +20,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -70,21 +67,53 @@ public class CheckIn extends HttpServlet {
                     + "                </div>";
             if ("Confirmar".equals(request.getParameter("action"))) {
                 request.setAttribute("codigo", codigo);
-                t = tiqueteDAO.finfByCodigo(codigo);
+                t = tiqueteDAO.finfByCodigo(codigo.trim().toUpperCase());
                 if (t != null) {
                     request.setAttribute("codigo", t.getCodigo());
-                    if (t.getCheckedin() == 0) {
-                        request.getRequestDispatcher("/checkin.jsp").forward(request, response);
-                        return;
-                    }
+                    t.setCheckedin(1);
+                    tiqueteDAO.edit(t);
                     if (t.getTipo() == 0) {
                         Cliente c = clienteDAO.find(new ClientePK(t.getTipoid(), t.getNumeroid()));
                         nombres = c.getNombre() + " " + c.getApellido();
-                        ident = c.getClientePK().getTipoid() + " " + c.getClientePK().getNumeroid();
+                        int inttipo = Integer.parseInt(c.getClientePK().getTipoid());
+                        String strtipo = "";
+
+                        switch (inttipo) {
+                            case 1:
+                                strtipo = "Cédula: ";
+                                break;
+                            case 2:
+                                strtipo = "Cédula de extranjeria: ";
+                                break;
+                            case 3:
+                                strtipo = "Pasaporte: ";
+                                break;
+                            case 4:
+                                strtipo = "Registro civil: ";
+                                break;
+                        }
+                        ident = strtipo + " " + c.getClientePK().getNumeroid();
                     } else {
                         Socio s = socioDAO.find(new SocioPK(t.getTipoid(), t.getNumeroid()));
                         nombres = s.getNombre() + " " + s.getApellido();
-                        ident = s.getSocioPK().getTipoid() + " " + s.getSocioPK().getNumeroid();
+                        int inttipo = Integer.parseInt(s.getSocioPK().getTipoid());
+                        String strtipo = "";
+
+                        switch (inttipo) {
+                            case 1:
+                                strtipo = "Cédula: ";
+                                break;
+                            case 2:
+                                strtipo = "Cédula de extranjeria: ";
+                                break;
+                            case 3:
+                                strtipo = "Pasaporte: ";
+                                break;
+                            case 4:
+                                strtipo = "Registro civil: ";
+                                break;
+                        }
+                        ident = strtipo + " " + s.getSocioPK().getNumeroid();
                     }
 
                     request.setAttribute("nombres", nombres);
@@ -92,9 +121,11 @@ public class CheckIn extends HttpServlet {
                     request.setAttribute("origen", t.getVuelo1().getAeropuertoSalida().getCiudad());
 
                     request.setAttribute("destino", t.getVuelo1().getAeropuertoLlegada().getCiudad());
+                    request.setAttribute("aeroorigen", t.getVuelo1().getAeropuertoSalida().getNombre());
+
+                    request.setAttribute("aerodestino", t.getVuelo1().getAeropuertoLlegada().getNombre());
                     request.setAttribute("fecha", t.getVuelo1().getFecha());
 
-                    request.setAttribute("avion", t.getAsiento1().getCabina().getAvion().getNombre());
                     request.getRequestDispatcher("/ticket.jsp").forward(request, response);
                     return;
                 }
@@ -104,28 +135,110 @@ public class CheckIn extends HttpServlet {
                 t = tiqueteDAO.finfByCodigo(codigo);
                 if (t != null) {
                     request.setAttribute("codigo", t.getCodigo());
-                    if (t.getCheckedin() == 1) {
-                        request.getRequestDispatcher("/ticket.jsp").forward(request, response);
-                        return;
-                    }
-
-                    String vuelo;
 
                     if (t.getTipo() == 0) {
                         Cliente c = clienteDAO.find(new ClientePK(t.getTipoid(), t.getNumeroid()));
                         nombres = c.getNombre() + " " + c.getApellido();
-                        ident = c.getClientePK().getTipoid() + " " + c.getClientePK().getNumeroid();
+                        int inttipo = Integer.parseInt(c.getClientePK().getTipoid());
+                        String strtipo = "";
+
+                        switch (inttipo) {
+                            case 1:
+                                strtipo = "Cédula: ";
+                                break;
+                            case 2:
+                                strtipo = "Cédula de extranjeria: ";
+                                break;
+                            case 3:
+                                strtipo = "Pasaporte: ";
+                                break;
+                            case 4:
+                                strtipo = "Registro civil: ";
+                                break;
+                        }
+                        ident = strtipo + " " + c.getClientePK().getNumeroid();
                     } else {
                         Socio s = socioDAO.find(new SocioPK(t.getTipoid(), t.getNumeroid()));
                         nombres = s.getNombre() + " " + s.getApellido();
-                        ident = s.getSocioPK().getTipoid() + " " + s.getSocioPK().getNumeroid();
-                    }
-                    Vuelo v = t.getVuelo1();
-                    vuelo = v.getAeropuertoSalida().getNombre() + " " + v.getAeropuertoLlegada().getNombre();
-                    confirma = ident + "\n" + nombres + "\n";
-                    confirma += vuelo;
+                        int inttipo = Integer.parseInt(s.getSocioPK().getTipoid());
+                        String strtipo = "";
 
-                    confirma += "<a class=\"waves-effect waves-light indigo btn modal-trigger\" href=\"#modal1\">Modal</a>\n"
+                        switch (inttipo) {
+                            case 1:
+                                strtipo = "Cédula: ";
+                                break;
+                            case 2:
+                                strtipo = "Cédula de extranjeria: ";
+                                break;
+                            case 3:
+                                strtipo = "Pasaporte: ";
+                                break;
+                            case 4:
+                                strtipo = "Registro civil: ";
+                                break;
+                        }
+                        ident = strtipo + " " + s.getSocioPK().getNumeroid();
+                    }
+                    if (t.getCheckedin() == 1) {
+                        request.setAttribute("nombres", nombres);
+                        request.setAttribute("ident", ident);
+                        request.setAttribute("origen", t.getVuelo1().getAeropuertoSalida().getCiudad());
+
+                        request.setAttribute("destino", t.getVuelo1().getAeropuertoLlegada().getCiudad());
+                        request.setAttribute("aeroorigen", t.getVuelo1().getAeropuertoSalida().getNombre());
+
+                        request.setAttribute("aerodestino", t.getVuelo1().getAeropuertoLlegada().getNombre());
+                        request.setAttribute("fecha", t.getVuelo1().getFecha());
+
+                        request.getRequestDispatcher("/ticket.jsp").forward(request, response);
+                        return;
+
+                    }
+                    confirma = "<span class=\"card-title\">DATOS DEL TIQUETE</span>\n"
+                            + "        <table class=\"responsive-table highlight\">\n"
+                            + "            <tbody>\n"
+                            + "                <tr>\n"
+                            + "                    <td>Código:</td>\n"
+                            + "                    <td><p>"+ t.getCodigo()+"</p></td>                          \n"
+                            + "                </tr>\n"
+                            + "                <tr>\n"
+                            + "                    <td>Identificación:</td>\n"
+                            + "                    <td><p>"+ident+ "</p></td>                          \n"
+                            + "                </tr>\n"
+                            + "\n"
+                            + "                <tr>\n"
+                            + "                    <td>Nombres:</td>\n"
+                            + "                    <td><p>"+nombres+"</p></td>\n"
+                            + "                </tr>\n"
+                            + "\n"
+                            + "                <tr>\n"
+                            + "                    <td>Ciudad de origen:</td>\n"
+                            + "                    <td><p>"+t.getVuelo1().getAeropuertoSalida().getCiudad()+"</p></td>\n"
+                            + "                </tr>\n"
+                            + "                <tr>\n"
+                            + "                    <td>Aeropuerto de origen:</td>\n"
+                            + "                    <td><p>"+t.getVuelo1().getAeropuertoSalida().getNombre()+"</p></td>\n"
+                            + "                </tr>\n"
+                            + "                <tr>\n"
+                            + "                    <td>Ciudad de destino:</td>\n"
+                            + "                    <td><p>"+t.getVuelo1().getAeropuertoLlegada().getCiudad()+"</p></td>\n"
+                            + "                </tr>\n"
+                            + "                <tr>\n"
+                            + "                    <td>Aeropuerto de destino:</td>\n"
+                            + "                    <td><p>"+t.getVuelo1().getAeropuertoLlegada().getNombre()+"</p></td>\n"
+                            + "                </tr>\n"
+                            + "\n"
+                            + "                <tr>\n"
+                            + "                    <td>Fecha del Vuelo:</td>\n"
+                            + "                    <td><p>"+ t.getVuelo1().getFecha() +"</p></td>\n"
+                            + "                </tr>\n"
+                            + "\n"
+                            + "\n"
+                            + "            </tbody>\n"
+                            + "        </table>\n";
+                           
+
+                    confirma += "<a class=\"waves-effect waves-light indigo btn modal-trigger\" href=\"#modal1\">Check In</a>\n"
                             + "\n"
                             + "  <div id=\"modal1\" class=\"modal\" >\n"
                             + "    <div class=\"modal-content\" >\n"
