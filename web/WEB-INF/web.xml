@@ -32,6 +32,10 @@
         <servlet-name>QRCodeServlet</servlet-name>
         <servlet-class>com.udea.controller.QRCodeServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MiCuenta</servlet-name>
+        <servlet-class>com.udea.controller.MiCuenta</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/IndexServlet</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>QRCodeServlet</servlet-name>
         <url-pattern>/QRCodeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MiCuenta</servlet-name>
+        <url-pattern>/MiCuenta</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
